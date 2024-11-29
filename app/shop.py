@@ -1,23 +1,40 @@
+from __future__ import annotations
+import datetime
+
+
 class Shop:
-    def __init__(self, name: str, location: list, products: dict) -> None:
-        self.name = name
-        self.location = location
-        self.products = products
+    def __init__(self, shop: dict) -> None:
+        self.name: str = shop.get("name")
+        self.location: list[int] = shop.get("location")
+        self.products: dict[str, float | int] = shop.get("products")
 
-    def print_receipt(self, customer: dict) -> None:
-        print(f"{customer.name} rides to {self.name}\n")
-        print(f"Date{{:}} 04/01/2021 12{{:}}33{{:}}41")
-        print(f"Thanks, {customer.name}, for your purchase!\n"
-              f"You have bought{{:}}")
+    @staticmethod
+    def format_value(value: float) -> str:
+        return str(value).rstrip("0").rstrip(".")
 
-        total_product_cost = 0
-        for product, quantity in customer.product_cart.items():
-            opc = self.products[product] * quantity
+    def print_receipt(
+            self,
+            customer_name: str,
+            customer_products: dict
+    ) -> None:
+        date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        receipt: str = ""
+        receipt += f"Date: {date}\n"
+        receipt += f"Thanks, {customer_name}, for your purchase!\n"
+        receipt += "You have bought:\n"
+        total_cost = 0
 
-            if isinstance(opc, float) and opc.is_integer():
-                opc = int(opc)
+        for product, count in customer_products.items():
+            price = count * self.products.get(product, 0)
+            total_cost += price
+            receipt += (
+                f"{count} {product}s for "
+                f"{self.format_value(price)} dollars\n"
+            )
 
-            print(f"{quantity} {product}s for {opc} dollars")
-            total_product_cost += self.products[product] * quantity
-
-        print(f"Total cost is {total_product_cost} dollars\nSee you again!\n")
+        receipt += (
+            f"Total cost is "
+            f"{self.format_value(total_cost)} dollars\n"
+        )
+        receipt += "See you again!"
+        print(receipt)

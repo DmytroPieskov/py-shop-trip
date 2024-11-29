@@ -6,9 +6,9 @@ class Shop:
 
     def print_receipt(self, customer: dict) -> None:
         print(f"{customer.name} rides to {self.name}\n")
-        print(f"{"Date:"} 04/01/2021 {"12:33:41"}")
+        print(f"Date{{:}} 04/01/2021 12{{:}}33{{:}}41")
         print(f"Thanks, {customer.name}, for your purchase!\n"
-              f"You have bought{":"}")
+              f"You have bought{{:}}")
 
         total_product_cost = 0
         for product, quantity in customer.product_cart.items():
